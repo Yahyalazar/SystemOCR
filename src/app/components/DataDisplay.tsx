@@ -1,11 +1,35 @@
-"use client";
+import * as React from "react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/inputs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import * as XLSX from "xlsx"; // Import xlsx library
 
-export default function DataDisplay({ jsonData }) {
-  const [playerData, setPlayerData] = useState(jsonData?.["Player Data"] || []);
+// Define types for the incoming jsonData
+interface Player {
+  id: number;
+  First_name_and_Last_name: string;
+  license_number: string;
+  cin_number?: string;
+  order_number?: string;
+}
+
+interface HeaderInformation {
+  organization: string;
+  organization_in_arabic: string;
+  subtitle: string;
+  "Date d'enregistrement": string;
+  Saison: string;
+  title: string;
+}
+
+interface JsonData {
+  "Header Information": HeaderInformation;
+  "Player Data": Player[];
+}
+
+export default function DataDisplay({ jsonData }: { jsonData: JsonData }) {
+  const [playerData, setPlayerData] = useState<Player[]>(jsonData?.["Player Data"] || []);
   const [season, setSeason] = useState(jsonData?.["Header Information"]?.Saison || "");
   const seasons = ["2022/2023", "2023/2024", "2024/2025"]; // Replace with your actual list of seasons
 
@@ -20,15 +44,40 @@ export default function DataDisplay({ jsonData }) {
   }, [jsonData]);
 
   // Handle input changes
-  const handleEdit = (index, field, value) => {
+  const handleEdit = (index: number, field: keyof Player, value: string) => {
     const updatedData = [...playerData];
+
+    // Safely assign value to the field based on field type
     updatedData[index][field] = value;
     setPlayerData(updatedData);
   };
 
   // Handle season change if dropdown is used
-  const handleSeasonChange = (e) => {
+  const handleSeasonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSeason(e.target.value);
+  };
+
+  // Export to Excel function
+  const exportToExcel = () => {
+    const wb = XLSX.utils.book_new();
+    
+    // Add Header Information as a sheet
+    const headerSheet = XLSX.utils.json_to_sheet([{
+      "Organization": jsonData["Header Information"].organization,
+      "Season": season,
+      "Date d'enregistrement": jsonData["Header Information"]["Date d'enregistrement"]
+    }]);
+    XLSX.utils.book_append_sheet(wb, headerSheet, "Header Information");
+
+    // Add Player Data as a sheet
+    const playerSheet = XLSX.utils.json_to_sheet(playerData, {
+      header: ["id", "First_name_and_Last_name", "license_number", "cin_number", "order_number"], // Explicit header
+      skipHeader: false, // Ensure header is included in the sheet
+    });
+    XLSX.utils.book_append_sheet(wb, playerSheet, "Player Data");
+
+    // Generate the Excel file and trigger the download
+    XLSX.writeFile(wb, "PlayerData.xlsx");
   };
 
   return (
@@ -89,7 +138,7 @@ export default function DataDisplay({ jsonData }) {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[50px]">#</TableHead>
-                    <TableHead>License Number</TableHead>
+                    <TableHead>license Number</TableHead>
                     <TableHead>CIN Number</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Order Number</TableHead>
@@ -137,6 +186,16 @@ export default function DataDisplay({ jsonData }) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Button to export data to Excel */}
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={exportToExcel}
+          className="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          Export to Excel
+        </button>
+      </div>
     </div>
   );
 }

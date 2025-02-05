@@ -41,7 +41,7 @@ export default function UploadForm() {
         setResponseData(null);
       }
   
-      /* console.log(data.data.content); */
+      console.log(data.data.content);
     } catch (error) {
       console.error("Error:", error);
     }
