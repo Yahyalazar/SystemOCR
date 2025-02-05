@@ -70,7 +70,7 @@ export default function UploadForm() {
       {/* Main Content */}
       <div className="mt-20 w-full">
         <h1 className="text-4xl font-bold mb-8 text-gray-800 text-center">
-          Bordoreau d'Assurance Collectif
+          Bordoreau d&apos;Assurance Collectif
         </h1>
         <form
           onSubmit={handleUpload}
@@ -98,7 +98,7 @@ export default function UploadForm() {
             <DataDisplay jsonData={responseData} />
           ) : (
             <p className="text-gray-500 text-center">
-              Aucun fichier traité pour l'instant.
+              Aucun fichier traité pour l&apos;instant.
             </p>
           )}
         </div>
