@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/inputs";
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import * as XLSX from "xlsx"; // Import xlsx library
@@ -151,28 +151,28 @@ const handleEdit = (index: number, field: keyof Player, value: string) => {
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>
-                        <Input
+                        <input
                           type="text"
                           value={player.license_number || ""}
                           onChange={(e) => handleEdit(index, "license_number", e.target.value)}
                         />
                       </TableCell>
                       <TableCell>
-                        <Input
+                        <input
                           type="text"
                           value={player.cin_number || ""}
                           onChange={(e) => handleEdit(index, "cin_number", e.target.value)}
                         />
                       </TableCell>
                       <TableCell>
-                        <Input
+                        <input
                           type="text"
                           value={player.First_name_and_Last_name || ""}
                           onChange={(e) => handleEdit(index, "First_name_and_Last_name", e.target.value)}
                         />
                       </TableCell>
                       <TableCell>
-                        <Input
+                        <input
                           type="text"
                           value={player.order_number || ""}
                           onChange={(e) => handleEdit(index, "order_number", e.target.value)}
