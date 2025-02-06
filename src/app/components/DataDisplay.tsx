@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/inputs";
@@ -44,13 +45,14 @@ export default function DataDisplay({ jsonData }: { jsonData: JsonData }) {
   }, [jsonData]);
 
   // Handle input changes
-  const handleEdit = (index: number, field: keyof Player, value: string) => {
-    const updatedData = [...playerData];
-
-    // Safely assign value to the field based on field type
-    updatedData[index][field] = value;
-    setPlayerData(updatedData);
-  };
+  // Handle input changes
+const handleEdit = (index: number, field: keyof Player, value: string) => {
+  const updatedData = [...playerData];
+  
+  // Safely assign value to the field based on field type
+  updatedData[index][field] = value; // This is now properly typed
+  setPlayerData(updatedData);
+};
 
   // Handle season change if dropdown is used
   const handleSeasonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -63,18 +65,18 @@ export default function DataDisplay({ jsonData }: { jsonData: JsonData }) {
     
     // Add Header Information as a sheet
     const headerSheet = XLSX.utils.json_to_sheet([{
-      "Organization": jsonData["Header Information"].organization,
-      "Season": season,
+      "Organisation": jsonData["Header Information"].organization,
+      "Saison": season,
       "Date d'enregistrement": jsonData["Header Information"]["Date d'enregistrement"]
     }]);
-    XLSX.utils.book_append_sheet(wb, headerSheet, "Header Information");
+    XLSX.utils.book_append_sheet(wb, headerSheet, "Informations de l'entête");
 
     // Add Player Data as a sheet
     const playerSheet = XLSX.utils.json_to_sheet(playerData, {
       header: ["id", "First_name_and_Last_name", "license_number", "cin_number", "order_number"], // Explicit header
       skipHeader: false, // Ensure header is included in the sheet
     });
-    XLSX.utils.book_append_sheet(wb, playerSheet, "Player Data");
+    XLSX.utils.book_append_sheet(wb, playerSheet, "Données des joueurs");
 
     // Generate the Excel file and trigger the download
     XLSX.writeFile(wb, "PlayerData.xlsx");
@@ -84,20 +86,20 @@ export default function DataDisplay({ jsonData }: { jsonData: JsonData }) {
     <div className="container mx-auto p-6 space-y-8">
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-primary">{jsonData?.["Header Information"]?.title || "Data"}</CardTitle>
+          <CardTitle className="text-3xl font-bold text-primary">{jsonData?.["Header Information"]?.title || "Données"}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Organization</p>
+              <p className="text-sm font-medium text-muted-foreground">Organisation</p>
               <p className="text-lg font-semibold">{jsonData?.["Header Information"]?.organization || "N/A"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Organization (Arabic)</p>
+              <p className="text-sm font-medium text-muted-foreground">Organisation (Arabe)</p>
               <p className="text-lg font-semibold">{jsonData?.["Header Information"]?.organization_in_arabic || "N/A"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Subtitle</p>
+              <p className="text-sm font-medium text-muted-foreground">Sous-titre</p>
               <p className="text-lg font-semibold">{jsonData?.["Header Information"]?.subtitle || "N/A"}</p>
             </div>
             <div>
@@ -105,7 +107,7 @@ export default function DataDisplay({ jsonData }: { jsonData: JsonData }) {
               <p className="text-lg font-semibold">{jsonData?.["Header Information"]?.["Date d'enregistrement"] || "N/A"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Season</p>
+              <p className="text-sm font-medium text-muted-foreground">Saison</p>
               {season ? (
                 <p className="text-lg font-semibold">{season}</p>
               ) : (
@@ -129,7 +131,7 @@ export default function DataDisplay({ jsonData }: { jsonData: JsonData }) {
       {/* Table Displaying Players */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-primary">Player Data</CardTitle>
+          <CardTitle className="text-2xl font-bold text-primary">Données des joueurs</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -138,10 +140,10 @@ export default function DataDisplay({ jsonData }: { jsonData: JsonData }) {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[50px]">#</TableHead>
-                    <TableHead>license Number</TableHead>
-                    <TableHead>CIN Number</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Order Number</TableHead>
+                    <TableHead>Numéro de licence</TableHead>
+                    <TableHead>Numéro CIN</TableHead>
+                    <TableHead>Nom</TableHead>
+                    <TableHead>Numéro de commande</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -181,7 +183,7 @@ export default function DataDisplay({ jsonData }: { jsonData: JsonData }) {
                 </TableBody>
               </Table>
             ) : (
-              <p className="text-center text-gray-500">No players found.</p>
+              <p className="text-center text-gray-500">Aucun joueur trouvé.</p>
             )}
           </div>
         </CardContent>
@@ -193,7 +195,7 @@ export default function DataDisplay({ jsonData }: { jsonData: JsonData }) {
           onClick={exportToExcel}
           className="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700"
         >
-          Export to Excel
+          Exporter vers Excel
         </button>
       </div>
     </div>
