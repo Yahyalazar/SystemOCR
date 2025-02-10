@@ -122,7 +122,7 @@ type SafeUpdate<T> = {
                 Organisation
               </p>
               <p className="text-lg font-semibold">
-                {jsonData?.["Header Information"]?.organization || "N/A"}
+                {jsonData?.["Header Information"]?.organization || "-"}
               </p>
             </div>
             <div>
@@ -131,7 +131,7 @@ type SafeUpdate<T> = {
               </p>
               <p className="text-lg font-semibold">
                 {jsonData?.["Header Information"]?.organization_in_arabic ||
-                  "N/A"}
+                  "-"}
               </p>
             </div>
             <div>
@@ -139,7 +139,7 @@ type SafeUpdate<T> = {
                 Sous-titre
               </p>
               <p className="text-lg font-semibold">
-                {jsonData?.["Header Information"]?.subtitle || "N/A"}
+                {jsonData?.["Header Information"]?.subtitle || "-"}
               </p>
             </div>
             <div>
