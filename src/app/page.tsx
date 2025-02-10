@@ -27,8 +27,6 @@ export default function UploadForm() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchWithRetry = async (url: string, options: RequestInit, retries = 3): Promise<Response> => {
-    let lastError: unknown = null;
-  
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
         const controller = new AbortController();
@@ -53,7 +51,6 @@ export default function UploadForm() {
   
         return response;
       } catch (error) {
-        lastError = error;
         console.warn(`Attempt ${attempt} failed. Retrying... Last error:`, error);
   
         if (attempt === retries) {
@@ -66,6 +63,7 @@ export default function UploadForm() {
   
     throw new Error("Unreachable code"); // Fallback error (should never reach here)
   };
+  
 
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
